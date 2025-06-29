@@ -154,6 +154,115 @@ p {
     box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
 }
 
+/* Language Dropdown */
+.language-dropdown {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    color: white;
+}
+
+.language-toggle {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 8px 16px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    gap: 8px;
+}
+
+.language-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.globe-icon {
+    font-size: 16px;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.language-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.language-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-width: 150px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    margin-top: 8px;
+}
+
+.language-dropdown.open .language-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.language-option {
+    display: block;
+    padding: 10px 16px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    margin: 4px;
+}
+
+.language-option:hover {
+    background: rgba(45, 124, 49, 0.1);
+    color: var(--primary-color);
+}
+
+.language-option.current {
+    background: var(--primary-color);
+    color: white;
+}
+
+.language-option.current:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .language-dropdown {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .language-toggle {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .current-lang {
+        display: none;
+    }
+}
+
 /* App Store Button */
 .app-store-btn {
     display: inline-flex;

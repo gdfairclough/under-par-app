@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize screenshots showcase
     initializeScreenshotsShowcase();
     
+    // Initialize language dropdown
+    initializeLanguageDropdown();
+    
     // Enhanced smooth scrolling for navigation links
     const links = document.querySelectorAll('a[href^="#"]');
     
@@ -174,6 +177,53 @@ document.addEventListener('DOMContentLoaded', function() {
                     startAutoSlide();
                 }
             }
+        });
+    }
+    
+    // Initialize language dropdown functionality
+    function initializeLanguageDropdown() {
+        const languageDropdown = document.querySelector('.language-dropdown');
+        const languageToggle = document.querySelector('.language-toggle');
+        const languageMenu = document.querySelector('.language-menu');
+        
+        if (!languageDropdown || !languageToggle || !languageMenu) {
+            return;
+        }
+        
+        // Toggle dropdown on button click
+        languageToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            languageDropdown.classList.toggle('open');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!languageDropdown.contains(e.target)) {
+                languageDropdown.classList.remove('open');
+            }
+        });
+        
+        // Close dropdown when pressing Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                languageDropdown.classList.remove('open');
+            }
+        });
+        
+        // Close dropdown after selecting a language
+        const languageOptions = document.querySelectorAll('.language-option');
+        languageOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                languageDropdown.classList.remove('open');
+                
+                // Track language change
+                trackEvent('language_changed', {
+                    from_language: document.querySelector('.language-option.current')?.textContent || 'Unknown',
+                    to_language: this.textContent,
+                    user_agent: navigator.userAgent
+                });
+            });
         });
     }
     
