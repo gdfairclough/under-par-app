@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Under Par - Redirecting...</title>
+    <script>
+        // Immediate language detection and redirect
+        (function() {
+            // Available languages in our app
+            const availableLanguages = ['en', 'de', 'fr', 'es', 'fi', 'sv', 'nb', 'cs', 'ja', 'ko'];
+            
+            // Language mapping for common variations
+            const languageMap = {
+                'en': 'en', 'en-US': 'en', 'en-GB': 'en', 'en-CA': 'en', 'en-AU': 'en',
+                'de': 'de', 'de-DE': 'de', 'de-AT': 'de', 'de-CH': 'de',
+                'fr': 'fr', 'fr-FR': 'fr', 'fr-CA': 'fr', 'fr-BE': 'fr', 'fr-CH': 'fr',
+                'es': 'es', 'es-ES': 'es', 'es-MX': 'es', 'es-AR': 'es', 'es-CO': 'es', 'es-US': 'es',
+                'fi': 'fi', 'fi-FI': 'fi',
+                'sv': 'sv', 'sv-SE': 'sv', 'sv-FI': 'sv',
+                'nb': 'nb', 'no': 'nb', 'nb-NO': 'nb', 'nn-NO': 'nb',
+                'cs': 'cs', 'cs-CZ': 'cs',
+                'ja': 'ja', 'ja-JP': 'ja',
+                'ko': 'ko', 'ko-KR': 'ko'
+            };
+            
+            // Check if user has manually selected a language before
+            const savedLanguage = localStorage.getItem('under-par-language');
+            if (savedLanguage && availableLanguages.includes(savedLanguage)) {
+                window.location.replace(savedLanguage + '/');
+                return;
+            }
+            
+            // Get browser languages
+            const browserLanguages = navigator.languages || [navigator.language || navigator.userLanguage || 'en'];
+            
+            // Find first supported language
+            for (let lang of browserLanguages) {
+                // Try exact match first
+                if (languageMap[lang]) {
+                    const targetLang = languageMap[lang];
+                    localStorage.setItem('under-par-language', targetLang);
+                    window.location.replace(targetLang + '/');
+                    return;
+                }
+                
+                // Try language code without region (e.g., 'de' from 'de-AT')
+                const langCode = lang.split('-')[0];
+                if (languageMap[langCode]) {
+                    const targetLang = languageMap[langCode];
+                    localStorage.setItem('under-par-language', targetLang);
+                    window.location.replace(targetLang + '/');
+                    return;
+                }
+            }
+            
+            // Default to English if no match found
+            localStorage.setItem('under-par-language', 'en');
+            window.location.replace('en/');
+        })();
+    </script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .language-selector {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .language-option {
+            display: block;
+            padding: 1rem;
+            background: var(--bg-secondary, #f8f9fa);
+            border: 2px solid var(--border-color, #e9ecef);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary, #333);
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .language-option:hover {
+            background: var(--accent-color, #007bff);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .language-name {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .language-native {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .fallback-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff3cd;
+            border-radius: 8px;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-visual">⛳</div>
+        <div class="container">
+            <div class="language-selector">
+                <h1 class="hero-title">Under Par</h1>
+                <h2 class="hero-tagline">Select Your Language / Wählen Sie Ihre Sprache / Choisissez votre langue</h2>
+                
+                <div class="fallback-message">
+                    <strong>Automatic redirect failed.</strong> Please choose your language manually below.
+                </div>
+                
+                <div class="language-grid">
+                    <a href="en/" class="language-option" data-lang="en">
+                        <span class="language-name">English</span>
+                        <span class="language-native">English</span>
+                    </a>
+                    
+                    <a href="de/" class="language-option" data-lang="de">
+                        <span class="language-name">German</span>
+                        <span class="language-native">Deutsch</span>
+                    </a>
+                    
+                    <a href="fr/" class="language-option" data-lang="fr">
+                        <span class="language-name">French</span>
+                        <span class="language-native">Français</span>
+                    </a>
+                    
+                    <a href="es/" class="language-option" data-lang="es">
+                        <span class="language-name">Spanish</span>
+                        <span class="language-native">Español</span>
+                    </a>
+                    
+                    <a href="fi/" class="language-option" data-lang="fi">
+                        <span class="language-name">Finnish</span>
+                        <span class="language-native">Suomi</span>
+                    </a>
+                    
+                    <a href="sv/" class="language-option" data-lang="sv">
+                        <span class="language-name">Swedish</span>
+                        <span class="language-native">Svenska</span>
+                    </a>
+                    
+                    <a href="nb/" class="language-option" data-lang="nb">
+                        <span class="language-name">Norwegian</span>
+                        <span class="language-native">Norsk</span>
+                    </a>
+                    
+                    <a href="cs/" class="language-option" data-lang="cs">
+                        <span class="language-name">Czech</span>
+                        <span class="language-native">Česky</span>
+                    </a>
+                    
+                    <a href="ja/" class="language-option" data-lang="ja">
+                        <span class="language-name">Japanese</span>
+                        <span class="language-native">日本語</span>
+                    </a>
+                    
+                    <a href="ko/" class="language-option" data-lang="ko">
+                        <span class="language-name">Korean</span>
+                        <span class="language-native">한국어</span>
+                    </a>
+                </div>
+                
+                <p style="margin-top: 2rem; color: #666; font-size: 0.9rem;">
+                    Don't see your language? The app will default to English with full functionality.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // Save language preference when user manually selects
+        document.querySelectorAll('.language-option').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const lang = this.getAttribute('data-lang');
+                localStorage.setItem('under-par-language', lang);
+            });
+        });
+    </script>
+</body>
+</html> 
