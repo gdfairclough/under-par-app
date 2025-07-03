@@ -109,7 +109,7 @@ p {
     border: none;
     cursor: pointer;
     position: relative;
-    overflow: hidden;
+    overflow: hidden !important;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -141,17 +141,263 @@ p {
 }
 
 .btn-secondary {
-    background: transparent;
+    /* Use solid background that mimics transparency for Safari compatibility */
+    background: rgba(255, 255, 255, 0.1) !important;
+    background-image: none !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
     color: var(--white);
     border: 2px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: none !important;
+    overflow: hidden !important;
+    /* Safari-specific fixes */
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2) !important;
+    background-image: none !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
     border-color: var(--white);
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Additional specificity to prevent gradient inheritance */
+.btn.btn-secondary {
+    background: rgba(255, 255, 255, 0.1) !important;
+    background-image: none !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+}
+
+.btn.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    background-image: none !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Ensure buttons are properly initialized to prevent FOUC */
+.hero-buttons {
+    opacity: 1;
+}
+
+@keyframes fadeInButtons {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Safari-specific fix: Hide pseudo-elements during button animation */
+.hero-buttons .btn-primary::before,
+.hero-buttons .btn.btn-primary::before,
+.hero-buttons a.btn-primary::before {
+    opacity: 0 !important;
+    -webkit-transform: translate3d(-100%, 0, 0) !important;
+    transform: translate3d(-100%, 0, 0) !important;
+    will-change: transform !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+}
+
+/* Additional Safari-specific animation fix */
+@supports (-webkit-appearance: none) {
+    .hero-buttons .btn-primary::before,
+    .hero-buttons .btn.btn-primary::before,
+    .hero-buttons a.btn-primary::before {
+        opacity: 0 !important;
+        -webkit-transform: translate3d(-100%, 0, 0) !important;
+        transform: translate3d(-100%, 0, 0) !important;
+        will-change: transform !important;
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+        visibility: hidden !important;
+    }
+}
+
+/* Comprehensive Safari fix: Disable pseudo-element during animation */
+.hero-buttons[style*="opacity: 0"] .btn-primary::before,
+.hero-buttons[style*="animation"] .btn-primary::before {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Safari-specific: Disable pseudo-element during page load */
+.safari-browser .hero-buttons .btn-primary::before,
+.safari-browser .hero-buttons .btn.btn-primary::before,
+.safari-browser .hero-buttons a.btn-primary::before {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    -webkit-transform: scale(0) !important;
+    transform: scale(0) !important;
+}
+
+/* Only enable pseudo-element after animation completes */
+.hero-buttons:not(.animation-complete) .btn-primary::before,
+.hero-buttons:not(.animation-complete) .btn.btn-primary::before,
+.hero-buttons:not(.animation-complete) a.btn-primary::before {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    -webkit-transform: scale(0) !important;
+    transform: scale(0) !important;
+}
+
+/* Safari-specific: Additional safety for pseudo-element hiding */
+.safari-browser .hero-buttons:not(.animation-complete) .btn-primary::before,
+.safari-browser .hero-buttons:not(.animation-complete) .btn.btn-primary::before,
+.safari-browser .hero-buttons:not(.animation-complete) a.btn-primary::before {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    -webkit-transform: scale(0) !important;
+    transform: scale(0) !important;
+    content: none !important;
+}
+
+/* Immediate button style application to prevent flash */
+.btn-secondary,
+.btn.btn-secondary,
+a.btn-secondary {
+    background: rgba(255, 255, 255, 0.1) !important;
+    background-image: none !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+}
+
+/* Completely disable ::before pseudo-element for secondary buttons */
+.btn-secondary::before,
+.btn.btn-secondary::before,
+a.btn-secondary::before {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    opacity: 0 !important;
+    /* Safari-specific pseudo-element fixes */
+    -webkit-transform: scale(0) !important;
+    transform: scale(0) !important;
+    visibility: hidden !important;
+}
+
+.btn-secondary:hover::before,
+.btn.btn-secondary:hover::before,
+a.btn-secondary:hover::before {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    opacity: 0 !important;
+    /* Safari-specific pseudo-element fixes */
+    -webkit-transform: scale(0) !important;
+    transform: scale(0) !important;
+    visibility: hidden !important;
+}
+
+/* Safari-specific fixes for button rendering issues */
+@supports (-webkit-appearance: none) {
+    .btn-secondary,
+    .btn.btn-secondary,
+    a.btn-secondary {
+        background: rgba(255, 255, 255, 0.1) !important;
+        background-image: none !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        -webkit-background-clip: padding-box !important;
+        background-clip: padding-box !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+    }
+    
+    .btn-secondary::before,
+    .btn.btn-secondary::before,
+    a.btn-secondary::before {
+        content: "" !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        z-index: -1 !important;
+        -webkit-transform: scale(0) !important;
+        transform: scale(0) !important;
+    }
+}
+
+/* Safari-specific class-based fixes */
+.safari-browser .btn-secondary,
+.safari-browser .btn.btn-secondary,
+.safari-browser a.btn-secondary {
+    background: rgba(255, 255, 255, 0.1) !important;
+    background-image: none !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    will-change: transform !important;
+    overflow: hidden !important;
+}
+
+.safari-browser .btn-secondary::before,
+.safari-browser .btn.btn-secondary::before,
+.safari-browser a.btn-secondary::before {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    -webkit-transform: scale(0) !important;
+    transform: scale(0) !important;
+    visibility: hidden !important;
+    z-index: -999 !important;
+}
+
+/* Safari-specific fixes for primary button pseudo-element artifacts */
+@supports (-webkit-appearance: none) {
+    .btn-primary::before,
+    .btn.btn-primary::before,
+    a.btn-primary::before {
+        opacity: 0 !important;
+        -webkit-transform: translate3d(-100%, 0, 0) !important;
+        transform: translate3d(-100%, 0, 0) !important;
+        will-change: transform !important;
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+    }
+}
+
+/* Additional Safari-specific primary button fixes */
+.safari-browser .btn-primary,
+.safari-browser .btn.btn-primary,
+.safari-browser a.btn-primary {
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    will-change: transform !important;
+    overflow: hidden !important;
+}
+
+.safari-browser .btn-primary::before,
+.safari-browser .btn.btn-primary::before,
+.safari-browser a.btn-primary::before {
+    opacity: 0 !important;
+    -webkit-transform: translate3d(-100%, 0, 0) !important;
+    transform: translate3d(-100%, 0, 0) !important;
+    will-change: transform !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
 }
 
 /* Language Dropdown */
@@ -351,7 +597,6 @@ p {
 .hero-text {
     flex: 1;
     text-align: left;
-    animation: slideInFromLeft 1s ease-out;
 }
 
 .hero-image {
@@ -383,7 +628,6 @@ p {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    animation: slideInFromLeft 1s ease-out 0.2s both;
 }
 
 .hero-tagline {
@@ -391,7 +635,6 @@ p {
     margin-bottom: 2rem;
     color: rgba(255, 255, 255, 0.95);
     font-weight: 500;
-    animation: slideInFromLeft 1s ease-out 0.4s both;
 }
 
 .hero-description {
@@ -401,7 +644,6 @@ p {
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    animation: slideInFromLeft 1s ease-out 0.6s both;
 }
 
 .hero-buttons {
@@ -409,7 +651,6 @@ p {
     gap: 25px;
     justify-content: center;
     flex-wrap: wrap;
-    animation: slideInFromLeft 1s ease-out 0.8s both;
 }
 
 .hero-visual {
@@ -928,6 +1169,56 @@ p {
         flex-direction: column;
         align-items: center;
     }
+    
+    /* Prevent secondary button pseudo-element issues at mobile widths */
+    .btn-secondary,
+    .btn.btn-secondary {
+        overflow: hidden !important;
+    }
+    
+    .btn-secondary::before,
+    .btn.btn-secondary::before {
+        display: none !important;
+        content: none !important;
+        opacity: 0 !important;
+    }
+    
+    /* Safari-specific fixes for primary button at mobile widths */
+    .safari-browser .btn-primary,
+    .safari-browser .btn.btn-primary,
+    .safari-browser a.btn-primary {
+        overflow: hidden !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+        will-change: transform !important;
+    }
+    
+    .safari-browser .btn-primary::before,
+    .safari-browser .btn.btn-primary::before,
+    .safari-browser a.btn-primary::before {
+        opacity: 0 !important;
+        -webkit-transform: translate3d(-100%, 0, 0) !important;
+        transform: translate3d(-100%, 0, 0) !important;
+        will-change: transform !important;
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+    }
+    
+    /* Additional Safari primary button fixes using @supports */
+    @supports (-webkit-appearance: none) {
+        .btn-primary::before,
+        .btn.btn-primary::before,
+        a.btn-primary::before {
+            opacity: 0 !important;
+            -webkit-transform: translate3d(-100%, 0, 0) !important;
+            transform: translate3d(-100%, 0, 0) !important;
+            will-change: transform !important;
+            -webkit-backface-visibility: hidden !important;
+            backface-visibility: hidden !important;
+        }
+    }
 
     .hero-screenshot {
         width: 240px;
@@ -991,29 +1282,36 @@ p {
     /* Privacy Policy Mobile Styles */
     .privacy-header {
         min-height: 50vh;
-        padding: 60px 0;
+        padding: 40px 0;
     }
 
     .privacy-header .hero-title {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
 
     .privacy-header .hero-tagline {
-        font-size: 1.5rem;
-    }
-
-    .privacy-policy-content {
-        padding: 2rem 1.5rem;
-        margin: 0 1rem;
-    }
-
-    .privacy-policy-content h3 {
-        font-size: 1.2rem;
-        margin-top: 2rem;
+        font-size: 1.3rem;
     }
 
     .privacy-content {
-        padding: 60px 0;
+        padding: 40px 0;
+    }
+
+    .privacy-policy-content {
+        padding: 1.5rem;
+        margin: 0 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .privacy-policy-content h3 {
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+    }
+
+    .privacy-policy-content p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 1.2rem;
     }
 }
 
@@ -1072,6 +1370,105 @@ p {
     
     .app-store-line2 {
         font-size: 16px;
+    }
+    
+    /* Ensure secondary button is clipped at small screens */
+    .btn-secondary,
+    .btn.btn-secondary,
+    a.btn-secondary {
+        overflow: hidden !important;
+    }
+    
+    /* Ensure secondary button pseudo-element is completely disabled on small screens */
+    .btn-secondary::before,
+    .btn.btn-secondary::before,
+    a.btn-secondary::before {
+        display: none !important;
+        content: none !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    
+    /* Safari-specific fixes for primary button at smallest mobile widths */
+    .safari-browser .btn-primary,
+    .safari-browser .btn.btn-primary,
+    .safari-browser a.btn-primary {
+        overflow: hidden !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+        will-change: transform !important;
+    }
+    
+    .safari-browser .btn-primary::before,
+    .safari-browser .btn.btn-primary::before,
+    .safari-browser a.btn-primary::before {
+        opacity: 0 !important;
+        -webkit-transform: translate3d(-100%, 0, 0) !important;
+        transform: translate3d(-100%, 0, 0) !important;
+        will-change: transform !important;
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+    }
+    
+    /* Additional Safari primary button fixes for smallest screens */
+    @supports (-webkit-appearance: none) {
+        .btn-primary::before,
+        .btn.btn-primary::before,
+        a.btn-primary::before {
+            opacity: 0 !important;
+            -webkit-transform: translate3d(-100%, 0, 0) !important;
+            transform: translate3d(-100%, 0, 0) !important;
+            will-change: transform !important;
+            -webkit-backface-visibility: hidden !important;
+            backface-visibility: hidden !important;
+        }
+    }
+
+    /* Additional Privacy Policy Mobile Styles for Small Screens */
+    .privacy-header {
+        min-height: 40vh;
+        padding: 30px 0;
+    }
+
+    .privacy-header .hero-title {
+        font-size: 2rem;
+    }
+
+    .privacy-header .hero-tagline {
+        font-size: 1.2rem;
+    }
+
+    .privacy-content {
+        padding: 30px 0;
+    }
+
+    .privacy-policy-content {
+        padding: 1rem;
+        margin: 0 0.5rem;
+        border-radius: 15px;
+    }
+
+    .privacy-policy-content h3 {
+        font-size: 1rem;
+        margin-top: 1.2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .privacy-policy-content p {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    .privacy-header .hero-content {
+        text-align: center;
+    }
+
+    .privacy-header .hero-text {
+        padding: 0 1rem;
     }
 }
 

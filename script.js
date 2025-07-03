@@ -2,6 +2,12 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     
+    // Fix button styles immediately to prevent FOUC
+    fixButtonStyles();
+    
+    // Add animation completion handler for Safari pseudo-element fix
+    handleButtonAnimationComplete();
+    
     // Initialize loading animations
     initializeLoadingAnimations();
     
@@ -224,6 +230,64 @@ document.addEventListener('DOMContentLoaded', function() {
                     user_agent: navigator.userAgent
                 });
             });
+        });
+    }
+    
+    // Fix button styles immediately to prevent FOUC
+    function fixButtonStyles() {
+        // Detect Safari
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        
+        if (isSafari) {
+            document.body.classList.add('safari-browser');
+        }
+        
+        const secondaryButtons = document.querySelectorAll('.btn-secondary');
+        secondaryButtons.forEach(button => {
+            button.style.background = 'rgba(255, 255, 255, 0.1)';
+            button.style.backgroundImage = 'none';
+            button.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            button.style.boxShadow = 'none';
+            button.style.overflow = 'hidden';
+            
+            // Safari-specific fixes
+            if (isSafari) {
+                button.style.webkitTransform = 'translateZ(0)';
+                button.style.webkitBackfaceVisibility = 'hidden';
+                button.style.willChange = 'transform';
+                button.style.webkitBackgroundClip = 'padding-box';
+                
+                // Force pseudo-element removal in Safari
+                const style = document.createElement('style');
+                style.textContent = `
+                    .safari-browser .btn-secondary::before,
+                    .safari-browser .btn.btn-secondary::before {
+                        display: none !important;
+                        content: none !important;
+                        opacity: 0 !important;
+                        -webkit-transform: scale(0) !important;
+                        transform: scale(0) !important;
+                        visibility: hidden !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        });
+    }
+    
+    // Handle button animation completion for Safari pseudo-element fix
+    function handleButtonAnimationComplete() {
+        const heroButtons = document.querySelector('.hero-buttons');
+        if (!heroButtons) return;
+        
+        // Wait for the animation to complete (0.2s delay + 0.6s duration = 0.8s total)
+        setTimeout(() => {
+            heroButtons.classList.add('animation-complete');
+        }, 1000); // Adding extra buffer for safety
+        
+        // Also listen for the animation end event
+        heroButtons.addEventListener('animationend', function() {
+            this.classList.add('animation-complete');
         });
     }
     
